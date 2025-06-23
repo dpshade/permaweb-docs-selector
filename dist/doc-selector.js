@@ -7,9 +7,9 @@
   
   // Documentation site URLs - update these to your actual documentation URLs
   const DOCUMENTATION_LINKS = {
-    AO: "https://cookbook_ao.arweave.net/",
-    HYPERBEAM: "https://hyperbeam.arweave.net/",
-    ARWEAVE: "https://cookbook.arweave.net/"
+    AO: "https://cookbook_ao.arweave.net/welcome/ao-core-introduction.html",
+    HYPERBEAM: "https://hyperbeam.arweave.net/build/introduction/what-is-hyperbeam.html",
+    ARWEAVE: "https://cookbook.arweave.net/getting-started/index.html",
   };
   
   // Auto-detect current site based on URL
@@ -537,21 +537,21 @@
     function setHighlight(layerName) {
       if (layerName === "AO") {
         topSvg.style.opacity = "1";
-        middleSvg.style.opacity = "0.15";
-        bottomSvg.style.opacity = "0.05";
+        middleSvg.style.opacity = "0.3";
+        bottomSvg.style.opacity = "0.2";
         activeLayer = "AO";
         layerWrapper.style.cursor = currentCookbook !== "AO" ? "pointer" : "default";
         greyOutOtherLabels("AO");
       } else if (layerName === "HYPERBEAM") {
-        topSvg.style.opacity = "0.15";
+        topSvg.style.opacity = "0.3";
         middleSvg.style.opacity = "1";
-        bottomSvg.style.opacity = "0.05";
+        bottomSvg.style.opacity = "0.2";
         activeLayer = "HYPERBEAM";
         layerWrapper.style.cursor = currentCookbook !== "HYPERBEAM" ? "pointer" : "default";
         greyOutOtherLabels("HYPERBEAM");
       } else if (layerName === "ARWEAVE") {
-        topSvg.style.opacity = "0.15";
-        middleSvg.style.opacity = "0.15";
+        topSvg.style.opacity = "0.3";
+        middleSvg.style.opacity = "0.3";
         bottomSvg.style.opacity = "1";
         activeLayer = "ARWEAVE";
         layerWrapper.style.cursor = currentCookbook !== "ARWEAVE" ? "pointer" : "default";
