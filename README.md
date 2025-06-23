@@ -14,31 +14,26 @@ A standalone, lightweight JavaScript component for navigating between different 
 
 ## Quick Start
 
-### Method 1: Use Default Configuration (Recommended)
-The component comes with built-in constants that you can modify directly in the source code:
+### Auto-Detection (Recommended)
+The component automatically detects which documentation site it's on based on the URL:
 
-```javascript
-// In dist/doc-selector.js - modify these constants:
-const DEFAULT_CURRENT_COOKBOOK = "ARWEAVE"; // Change this for each site
-const DEFAULT_DOCUMENTATION_LINKS = {
-    AO: "https://cookbook_ao.arweave.net/",
-    HYPERBEAM: "https://hyperbeam.arweave.net/",
-    ARWEAVE: "https://cookbook.arweave.net/"
-};
-```
-
-Then simply load the script:
 ```html
+<!-- Just add this single line - no configuration needed! -->
 <script src="https://arweave.net/YOUR_TRANSACTION_ID"></script>
 ```
 
-### Method 2: Runtime Configuration
-Override the defaults at runtime before loading:
+**Auto-detection patterns:**
+- **AO**: URLs containing `cookbook_ao`, `ao.`, `/ao/`
+- **Hyperbeam**: URLs containing `hyperbeam`, `/hyperbeam/`  
+- **Arweave**: URLs containing `cookbook`, `arweave`, `/cookbook/` (also default fallback)
+
+### Manual Configuration (Optional)
+Override auto-detection if needed:
 
 ```javascript
-// Set configuration before loading the script
+// Set configuration before loading the script (optional)
 window.DocSelectorConfig = {
-    currentCookbook: "ARWEAVE", // Current site: "AO", "HYPERBEAM", or "ARWEAVE"
+    currentCookbook: "ARWEAVE", // Force specific site: "AO", "HYPERBEAM", or "ARWEAVE"
     links: {
         AO: "https://cookbook_ao.arweave.net/",
         HYPERBEAM: "https://hyperbeam.arweave.net/",
@@ -53,9 +48,19 @@ window.DocSelectorConfig = {
 
 ## Configuration Options
 
+### Auto-Detection Patterns
+The component automatically detects which site it's on by checking:
+
+| Site | Detection Patterns |
+|------|-------------------|
+| **AO** | URLs containing: `cookbook_ao`, `ao.`, `/ao/` |
+| **Hyperbeam** | URLs containing: `hyperbeam`, `/hyperbeam/` |
+| **Arweave** | URLs containing: `cookbook`, `arweave`, `/cookbook/` (also default fallback) |
+
+### Manual Override (Optional)
 | Option | Type | Description |
 |--------|------|-------------|
-| `currentCookbook` | String | The currently active site ("AO", "HYPERBEAM", or "ARWEAVE") |
+| `currentCookbook` | String | Force specific site ("AO", "HYPERBEAM", or "ARWEAVE") |
 | `links` | Object | URLs for each documentation site |
 
 ## Usage Examples

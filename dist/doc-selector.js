@@ -4,22 +4,49 @@
   // ========================================
   // CONFIGURATION CONSTANTS
   // ========================================
-  // Modify these constants to customize the component for your documentation sites
-  
-  // Current documentation site - change this for each deployment
-  const DEFAULT_CURRENT_COOKBOOK = "ARWEAVE"; // Options: "AO", "HYPERBEAM", "ARWEAVE"
   
   // Documentation site URLs - update these to your actual documentation URLs
-  const DEFAULT_DOCUMENTATION_LINKS = {
+  const DOCUMENTATION_LINKS = {
     AO: "https://cookbook_ao.arweave.net/",
     HYPERBEAM: "https://hyperbeam.arweave.net/",
     ARWEAVE: "https://cookbook.arweave.net/"
   };
   
+  // Auto-detect current site based on URL
+  function detectCurrentSite() {
+    const hostname = window.location.hostname.toLowerCase();
+    const href = window.location.href.toLowerCase();
+    
+    // Check hostname patterns
+    if (hostname.includes('cookbook_ao') || hostname.includes('ao.')) {
+      return 'AO';
+    }
+    if (hostname.includes('hyperbeam')) {
+      return 'HYPERBEAM';
+    }
+    if (hostname.includes('cookbook') || hostname.includes('arweave')) {
+      return 'ARWEAVE';
+    }
+    
+    // Check URL path patterns
+    if (href.includes('/ao/') || href.includes('cookbook_ao')) {
+      return 'AO';
+    }
+    if (href.includes('/hyperbeam/') || href.includes('hyperbeam')) {
+      return 'HYPERBEAM';
+    }
+    if (href.includes('/cookbook/') || href.includes('arweave')) {
+      return 'ARWEAVE';
+    }
+    
+    // Default fallback
+    return 'ARWEAVE';
+  }
+  
   // Configuration object that can be overridden at runtime
   window.DocSelectorConfig = window.DocSelectorConfig || {
-    currentCookbook: DEFAULT_CURRENT_COOKBOOK,
-    links: DEFAULT_DOCUMENTATION_LINKS
+    currentCookbook: detectCurrentSite(),
+    links: DOCUMENTATION_LINKS
   };
 
   // SVG layer definitions

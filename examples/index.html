@@ -100,24 +100,21 @@
             <h2>Basic Usage</h2>
             <p>The DocSelector component appears in the bottom-right corner. It automatically detects your site's theme and adapts accordingly.</p>
             
-            <h3>Method 1: Use Built-in Constants (Recommended)</h3>
-            <p>Modify the constants directly in the source code:</p>
-            <pre><code>// In dist/doc-selector.js - modify these constants:
-const DEFAULT_CURRENT_COOKBOOK = "ARWEAVE"; // Change for each site
-const DEFAULT_DOCUMENTATION_LINKS = {
-    AO: "https://cookbook_ao.arweave.net/",
-    HYPERBEAM: "https://hyperbeam.arweave.net/",
-    ARWEAVE: "https://cookbook.arweave.net/"
-};
+            <h3>Method 1: Auto-Detection (Recommended)</h3>
+            <p>The component automatically detects which site it's on based on the URL:</p>
+            <pre><code>// No configuration needed - just load the script!
+&lt;script src="https://arweave.net/YOUR_TRANSACTION_ID"&gt;&lt;/script&gt;
 
-// Then simply load:
-&lt;script src="https://arweave.net/YOUR_TRANSACTION_ID"&gt;&lt;/script&gt;</code></pre>
+// Auto-detection patterns:
+// • AO: URLs with 'cookbook_ao', 'ao.', or '/ao/'
+// • Hyperbeam: URLs with 'hyperbeam' or '/hyperbeam/'  
+// • Arweave: URLs with 'cookbook', 'arweave', '/cookbook/' (default)</code></pre>
             
-            <h3>Method 2: Runtime Configuration</h3>
-            <p>Override defaults at runtime (useful for dynamic setups):</p>
-            <pre><code>// Configure before loading the script
+            <h3>Method 2: Manual Override (Optional)</h3>
+            <p>Force a specific configuration if auto-detection doesn't work:</p>
+            <pre><code>// Override auto-detection (optional)
 window.DocSelectorConfig = {
-    currentCookbook: "ARWEAVE", // AO, HYPERBEAM, or ARWEAVE
+    currentCookbook: "ARWEAVE", // Force: AO, HYPERBEAM, or ARWEAVE
     links: {
         AO: "https://cookbook_ao.arweave.net/",
         HYPERBEAM: "https://hyperbeam.arweave.net/",
@@ -157,16 +154,19 @@ window.DocSelectorConfig = {
     </div>
     
     <script>
-        // This example uses Method 2 (runtime configuration) to override the defaults
-        // In production, you'd typically modify the constants in the source code instead
-        window.DocSelectorConfig = {
-            currentCookbook: "ARWEAVE",
-            links: {
-                AO: "https://cookbook_ao.arweave.net/",
-                HYPERBEAM: "https://hyperbeam.arweave.net/",
-                ARWEAVE: "https://cookbook.arweave.net/"
-            }
-        };
+        // This example demonstrates auto-detection
+        // Since this page URL contains neither 'cookbook_ao' nor 'hyperbeam',
+        // it will default to 'ARWEAVE' automatically
+        
+        // We can override if needed (uncomment to test):
+        // window.DocSelectorConfig = {
+        //     currentCookbook: "AO", // Force to AO for testing
+        //     links: {
+        //         AO: "https://cookbook_ao.arweave.net/",
+        //         HYPERBEAM: "https://hyperbeam.arweave.net/",
+        //         ARWEAVE: "https://cookbook.arweave.net/"
+        //     }
+        // };
         
         // Theme toggle functionality
         function toggleTheme() {
