@@ -1,0 +1,67 @@
+name: Deploy DocSelector (Simple)
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'dist/doc-selector.js'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+        
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Arweave SDK
+        run: npm install arweave
+        
+      - name: Deploy to Arweave using custom script
+        run: node scripts/deploy-to-arweave.js
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          
+      - name: Read transaction ID
+        id: tx
+        run: |
+          if [ -f ".arweave-tx-id" ]; then
+            TX_ID=$(cat .arweave-tx-id)
+            echo "transaction_id=$TX_ID" >> $GITHUB_OUTPUT
+            echo "🆔 Transaction ID: $TX_ID"
+          else
+            echo "❌ Transaction ID file not found"
+            exit 1
+          fi
+          
+      - name: Update deployment info
+        run: |
+          TX_ID="${{ steps.tx.outputs.transaction_id }}"
+          
+          cat > DEPLOYMENT.md << EOF
+          # 🚀 DocSelector - Latest Deployment
+          
+          **Deployed:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')  
+          **Transaction ID:** \`$TX_ID\`  
+          **URL:** https://arweave.net/$TX_ID  
+          **Commit:** ${{ github.sha }}  
+          
+          ## Quick Start
+          
+          \`\`\`html
+          <script src="https://arweave.net/$TX_ID"></script>
+          \`\`\`
+          EOF
+          
+      - name: Commit deployment info
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add DEPLOYMENT.md
+          git diff --staged --quiet || (git commit -m "📦 Deploy: ${{ steps.tx.outputs.transaction_id }}" && git push) 
