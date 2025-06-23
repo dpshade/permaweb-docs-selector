@@ -70,7 +70,7 @@ The component automatically detects which site it's on by checking:
 window.DocSelectorConfig = {
     currentCookbook: "ARWEAVE",
     links: {
-        AO: "/",
+        AO: "https://cookbook_ao.arweave.net/",
         HYPERBEAM: "https://hyperbeam.arweave.net/",
         ARWEAVE: "https://cookbook.arweave.net/"
     }
@@ -127,17 +127,17 @@ The project includes GitHub Actions that automatically deploy to Arweave when yo
 ```bash
 # Method 1: Base64 encoded wallet (recommended for GitHub Actions)
 export DEPLOY_KEY=$(base64 -i path/to/your/wallet.json)
-npm run deploy:arweave
+bun run deploy:arweave
 
 # Method 2: Raw JSON (for local testing)
 export DEPLOY_KEY='{"your":"wallet","json":"here"}'
-npm run deploy:arweave
+bun run deploy:arweave
 ```
 
 #### Using Arweave CLI
 ```bash
 # Install Arweave CLI
-npm install -g arweave-deploy
+bun install -g arweave-deploy
 
 # Deploy the component
 arweave-deploy dist/doc-selector.js --key-file your-wallet.json
@@ -153,18 +153,25 @@ arweave-deploy dist/doc-selector.js --key-file your-wallet.json
 
 1. Clone the repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/dps/doc-selector-component.git
 cd doc-selector-component
 ```
 
-2. Open the example in your browser
+2. Install dependencies
 ```bash
-open examples/index.html
+bun install
 ```
 
-3. Make changes to `dist/doc-selector.js`
+3. Start the development server
+```bash
+bun run serve
+```
 
-4. Test your changes by refreshing the example page
+4. Open http://localhost:8000 in your browser
+
+5. Make changes to `dist/doc-selector.js`
+
+6. Test your changes by refreshing the page
 
 ## Project Structure
 

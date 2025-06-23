@@ -158,15 +158,15 @@ window.DocSelectorConfig = {
         // Since this page URL contains neither 'cookbook_ao' nor 'hyperbeam',
         // it will default to 'ARWEAVE' automatically
         
-        // We can override if needed (uncomment to test):
-        // window.DocSelectorConfig = {
-        //     currentCookbook: "AO", // Force to AO for testing
-        //     links: {
-        //         AO: "https://cookbook_ao.arweave.net/",
-        //         HYPERBEAM: "https://hyperbeam.arweave.net/",
-        //         ARWEAVE: "https://cookbook.arweave.net/"
-        //     }
-        // };
+        // Override default config for demo (uncomment to test):
+        window.DocSelectorConfig = {
+            currentCookbook: "ARWEAVE", // Force to ARWEAVE for demo
+            links: {
+                AO: "https://cookbook_ao.arweave.net/",
+                HYPERBEAM: "https://hyperbeam.arweave.net/",
+                ARWEAVE: "https://cookbook.arweave.net/"
+            }
+        };
         
         // Theme toggle functionality
         function toggleTheme() {

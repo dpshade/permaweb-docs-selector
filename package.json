@@ -4,7 +4,8 @@
   "description": "A standalone JavaScript component for navigating between documentation sites",
   "main": "dist/doc-selector.js",
   "scripts": {
-    "serve": "python3 -m http.server 8000 || python -m SimpleHTTPServer 8000",
+    "serve": "bun serve --port 8000 examples/",
+    "serve:fallback": "python3 -m http.server 8000 || python -m SimpleHTTPServer 8000",
     "test": "echo \"Open examples/index.html in your browser to test the component\"",
     "build": "echo \"No build step required - component is already standalone\"",
     "deploy:arweave": "node scripts/deploy-to-arweave.js",
@@ -12,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-username/doc-selector-component.git"
+    "url": "git+https://github.com/dps/doc-selector-component.git"
   },
   "keywords": [
     "documentation",
@@ -24,12 +25,12 @@
     "ui",
     "interactive"
   ],
-  "author": "Your Name",
+  "author": "dps",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/your-username/doc-selector-component/issues"
+    "url": "https://github.com/dps/doc-selector-component/issues"
   },
-  "homepage": "https://github.com/your-username/doc-selector-component#readme",
+  "homepage": "https://github.com/dps/doc-selector-component#readme",
   "files": [
     "dist/",
     "examples/",

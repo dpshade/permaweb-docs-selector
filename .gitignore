@@ -4,9 +4,11 @@ wallet.json
 
 # Dependencies
 node_modules/
+bun.lockb
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
 
 # OS generated files
 .DS_Store
@@ -26,4 +28,9 @@ Thumbs.db
 # Environment files
 .env
 .env.local
-.env.production 
+.env.production
+
+# Build artifacts
+*.log
+.cache/
+.parcel-cache/

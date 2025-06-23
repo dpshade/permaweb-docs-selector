@@ -16,12 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         
-      - uses: actions/setup-node@v4
+      - uses: oven-sh/setup-bun@v1
         with:
-          node-version: '18'
+          bun-version: '1.x'
           
-      - name: Install Arweave SDK
-        run: npm install arweave
+      - name: Install dependencies
+        run: bun install
         
       - name: Deploy to Arweave using custom script
         run: node scripts/deploy-to-arweave.js
