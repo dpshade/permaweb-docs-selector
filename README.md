@@ -109,7 +109,12 @@ The project includes GitHub Actions that automatically deploy to Arweave when yo
 1. **Set up your wallet secret**:
    - Go to your GitHub repository → Settings → Secrets and variables → Actions
    - Add a new secret named `DEPLOY_KEY`
-   - Paste your Arweave wallet JSON as the value
+   - **Value**: Base64 encode your Arweave wallet JSON:
+     ```bash
+     # Encode your wallet file to base64
+     base64 -i path/to/your/wallet.json
+     # Copy the output and paste as the secret value
+     ```
 
 2. **Deploy**:
    - Push changes to `dist/doc-selector.js` on the main branch
@@ -120,10 +125,12 @@ The project includes GitHub Actions that automatically deploy to Arweave when yo
 
 #### Using the included script
 ```bash
-# Set your wallet as an environment variable
-export DEPLOY_KEY='{"your":"wallet","json":"here"}'
+# Method 1: Base64 encoded wallet (recommended for GitHub Actions)
+export DEPLOY_KEY=$(base64 -i path/to/your/wallet.json)
+npm run deploy:arweave
 
-# Deploy using the script
+# Method 2: Raw JSON (for local testing)
+export DEPLOY_KEY='{"your":"wallet","json":"here"}'
 npm run deploy:arweave
 ```
 

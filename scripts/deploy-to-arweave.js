@@ -32,9 +32,20 @@ async function deployToArweave() {
     
     let wallet;
     try {
-      wallet = JSON.parse(walletKey);
+      // Try to decode from base64 first
+      let walletJson;
+      try {
+        walletJson = Buffer.from(walletKey, 'base64').toString('utf-8');
+        console.log('✅ Decoded wallet from base64');
+      } catch (base64Error) {
+        // If base64 decoding fails, assume it's already a JSON string
+        walletJson = walletKey;
+        console.log('✅ Using wallet as JSON string');
+      }
+      
+      wallet = JSON.parse(walletJson);
     } catch (error) {
-      throw new Error('❌ Invalid wallet JSON in DEPLOY_KEY');
+      throw new Error('❌ Invalid wallet data in DEPLOY_KEY. Expected base64 encoded JSON or raw JSON.');
     }
     
     // Load the DocSelector file
