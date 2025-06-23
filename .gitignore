@@ -5,6 +5,7 @@ wallet.json
 # Dependencies
 node_modules/
 bun.lockb
+bun.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
