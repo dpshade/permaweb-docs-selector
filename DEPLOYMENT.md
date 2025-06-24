@@ -1,12 +1,12 @@
 # 🚀 DocSelector - Latest Deployment
 
-**Deployed:** 2025-06-23 20:03:32 UTC  
-**Transaction ID:** `iBGiiqdp3fXEwh72vggiEcEfCGoZciMwueNPDg9M89g`  
-**URL:** https://arweave.net/iBGiiqdp3fXEwh72vggiEcEfCGoZciMwueNPDg9M89g  
-**Commit:** 9d04019117dc5e96d14005f3e01608466f59ccc3  
+**Deployed:** 2025-06-24 14:17:29 UTC  
+**Transaction ID:** `QN-SE3ISD7lYdVDWhtjBBQbDhYXYgq-LMl-Q0zR0z7Y`  
+**URL:** https://arweave.net/QN-SE3ISD7lYdVDWhtjBBQbDhYXYgq-LMl-Q0zR0z7Y  
+**Commit:** 337103d6fd4355177a9e50fd23290a4db1003461  
 
 ## Quick Start
 
 ```html
-<script src="https://arweave.net/iBGiiqdp3fXEwh72vggiEcEfCGoZciMwueNPDg9M89g"></script>
+<script src="https://arweave.net/QN-SE3ISD7lYdVDWhtjBBQbDhYXYgq-LMl-Q0zR0z7Y"></script>
 ```
