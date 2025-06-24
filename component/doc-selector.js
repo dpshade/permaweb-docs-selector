@@ -131,7 +131,7 @@
     <path d="M75.875 22.7227V31.0938L38.625 9.58691V1.21582L75.875 22.7227Z" fill="white" stroke="black" stroke-width="0.25" stroke-linejoin="round"/>
     <path d="M38.3751 9.58691L1.12506 31.0938V22.7227L38.3751 1.21582V9.58691Z" fill="white" stroke="black" stroke-width="0.25" stroke-linejoin="round"/>
     <path opacity="0.9" d="M1 22.6504L38.5 44.301V52.9613L1 31.3106V22.6504Z" fill="white" stroke="black" stroke-width="0.25" stroke-linejoin="round"/>
-    <rect x="0.194856" y="0.3375" width="4.09545" height="4.09545" transform="matrix(0.866025 0.5 0 1 31.7079 42.948)" stroke="#FF6A13" stroke-width="0.45"/>
+    <rect x="0.194856" y="0.3375" width="4.09545" height="4.09545" transform="matrix(0.866025 0.5 0 1 31.7079 42.948)" fill="transparent" stroke="#FF6A13" stroke-width="0.45"/>
     <rect width="1.81818" height="1.81818" transform="matrix(-1.89276e-08 1 -0.866025 -0.5 34.4374 46)" fill="#FF6A13"/>
     <path opacity="0.9" d="M38.5 44.301L76 22.6504V31.3106L38.5 52.9613V44.301Z" fill="white" stroke="black" stroke-width="0.25" stroke-linejoin="round"/>
     <rect width="43.3013" height="43.3013" transform="matrix(0.866025 0.5 -0.866025 0.5 38.5 1)" fill="white" fill-opacity="0.9" stroke="black" stroke-width="0.25"/>
