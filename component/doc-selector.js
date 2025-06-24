@@ -12,6 +12,20 @@
     ARWEAVE: "https://cookbook.arweave.net/getting-started/index.html",
   };
   
+  // Predefined color schemes
+  const THEME_COLORS = {
+    light: {
+      text: "#333",
+      background: "white",
+      grey: "#999"
+    },
+    dark: {
+      text: "#e5e5e5",
+      background: "black",
+      grey: "#666"
+    }
+  };
+  
   // Auto-detect current site based on URL
   function detectCurrentSite() {
     const hostname = window.location.hostname.toLowerCase();
@@ -47,23 +61,21 @@
   window.DocSelectorConfig = window.DocSelectorConfig || {
     currentCookbook: detectCurrentSite(),
     links: DOCUMENTATION_LINKS,
-    theme: {
-      mode: "auto", // "auto", "light", "dark"
-      colors: {
-        light: {
-          text: "#333",
-          line: "#666",
-          background: "white"
-        },
-        dark: {
-          text: "#e5e5e5", 
-          line: "#888",
-          background: "black"
-        }
-      }
-    }
+    theme: "auto" // "auto", "light", or "dark"
   };
 
+  // Ensure theme is a valid string
+  if (!window.DocSelectorConfig.theme || typeof window.DocSelectorConfig.theme !== 'string') {
+    window.DocSelectorConfig.theme = "auto";
+  }
+
+  // Validate theme value
+  const validThemes = ["auto", "light", "dark"];
+  if (!validThemes.includes(window.DocSelectorConfig.theme)) {
+    console.warn(`DocSelector: Invalid theme "${window.DocSelectorConfig.theme}", falling back to "auto"`);
+    window.DocSelectorConfig.theme = "auto";
+  }
+  
   // SVG layer definitions
   const bottomLayer = `
     <path d="M75.749 31.3628L38.5 52.8696L1.25 31.3628L38.5 9.85596L75.749 31.3628Z" fill="black" stroke="white" stroke-width="0.25"/>
@@ -139,17 +151,22 @@
       const { theme } = window.DocSelectorConfig;
       
       function determineIsDark() {
-        if (theme.mode === "dark") return true;
-        if (theme.mode === "light") return false;
-        // Auto mode - detect from document element
-        return document.documentElement.classList.contains("dark");
+        try {
+          if (theme === "dark") return true;
+          if (theme === "light") return false;
+          // Auto mode - detect from document element
+          return document.documentElement.classList.contains("dark");
+        } catch (error) {
+          console.warn("DocSelector: Error determining theme, falling back to light mode", error);
+          return false;
+        }
       }
       
       // Fire once on start-up
       cb(determineIsDark());
       
       // Only observe DOM changes if in auto mode
-      if (theme.mode === "auto") {
+      if (theme === "auto") {
         const root = document.documentElement;
         const ob = new MutationObserver(() => cb(determineIsDark()));
         ob.observe(root, { attributes: true, attributeFilter: ["class"] });
@@ -164,33 +181,59 @@
     function updateThemeColors(dark) {
       isDark = dark;
       
-      const { theme } = window.DocSelectorConfig;
-      const colors = isDark ? theme.colors.dark : theme.colors.light;
-      const textColor = colors.text;
-      const lineColor = colors.line;
-      const backgroundColor = colors.background;
-      
-      // Update the "Select your documentation" text color
-      const docTextSpan = docText.querySelector("span");
-      if (docTextSpan) {
-        docTextSpan.style.color = textColor;
-      }
-      
-      // Update label colors
-      if (topLabel && topLabel.label) {
-        topLabel.label.style.color = textColor;
-        topLabel.svg.querySelector("path").setAttribute("stroke", lineColor);
-      }
-      if (middleLabel && middleLabel.label) {
-        middleLabel.label.style.color = textColor;
-        middleLabel.svg.querySelector("path").setAttribute("stroke", lineColor);
-      }
-      if (bottomLabel && bottomLabel.label) {
-        bottomLabel.label.style.color = textColor;
-        bottomLabel.svg.querySelector("path").setAttribute("stroke", lineColor);
-      }
-      if (innerWhiteSquare) {
-        innerWhiteSquare.style.backgroundColor = backgroundColor;
+      try {
+        const { theme } = window.DocSelectorConfig;
+        const colors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
+        const textColor = colors.text;
+        const backgroundColor = colors.background;
+        
+        // Update the "Select your documentation" text color
+        const docTextSpan = docText.querySelector("span");
+        if (docTextSpan) {
+          docTextSpan.style.color = textColor;
+        }
+        
+        // Update label colors (lines match text color)
+        if (topLabel && topLabel.label) {
+          topLabel.label.style.color = textColor;
+          topLabel.svg.querySelector("path").setAttribute("stroke", textColor);
+        }
+        if (middleLabel && middleLabel.label) {
+          middleLabel.label.style.color = textColor;
+          middleLabel.svg.querySelector("path").setAttribute("stroke", textColor);
+        }
+        if (bottomLabel && bottomLabel.label) {
+          bottomLabel.label.style.color = textColor;
+          bottomLabel.svg.querySelector("path").setAttribute("stroke", textColor);
+        }
+        if (innerWhiteSquare) {
+          innerWhiteSquare.style.backgroundColor = backgroundColor;
+        }
+      } catch (error) {
+        console.warn("DocSelector: Error updating theme colors, using fallback colors", error);
+        // Fallback to predefined colors
+        const fallbackColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
+        
+        const docTextSpan = docText.querySelector("span");
+        if (docTextSpan) {
+          docTextSpan.style.color = fallbackColors.text;
+        }
+        
+        if (topLabel && topLabel.label) {
+          topLabel.label.style.color = fallbackColors.text;
+          topLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+        }
+        if (middleLabel && middleLabel.label) {
+          middleLabel.label.style.color = fallbackColors.text;
+          middleLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+        }
+        if (bottomLabel && bottomLabel.label) {
+          bottomLabel.label.style.color = fallbackColors.text;
+          bottomLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+        }
+        if (innerWhiteSquare) {
+          innerWhiteSquare.style.backgroundColor = fallbackColors.background;
+        }
       }
     }
 
@@ -522,51 +565,92 @@
 
     // Helper functions for layer highlighting
     function greyOutOtherLabels(activeLayerName) {
-      const { theme } = window.DocSelectorConfig;
-      const colors = isDark ? theme.colors.dark : theme.colors.light;
-      const greyColor = isDark ? "#666" : "#999";
-      const greyLineColor = isDark ? "#444" : "#bbb";
-      const normalColor = colors.text;
-      const normalLineColor = colors.line;
+      try {
+        const { theme } = window.DocSelectorConfig;
+        const colors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
+        const greyColor = colors.grey;
+        const normalColor = colors.text;
 
-      topLabel.label.style.color = normalColor;
-      middleLabel.label.style.color = normalColor;
-      bottomLabel.label.style.color = normalColor;
-      topLabel.svg.querySelector("path").setAttribute("stroke", normalLineColor);
-      middleLabel.svg.querySelector("path").setAttribute("stroke", normalLineColor);
-      bottomLabel.svg.querySelector("path").setAttribute("stroke", normalLineColor);
+        topLabel.label.style.color = normalColor;
+        middleLabel.label.style.color = normalColor;
+        bottomLabel.label.style.color = normalColor;
+        topLabel.svg.querySelector("path").setAttribute("stroke", normalColor);
+        middleLabel.svg.querySelector("path").setAttribute("stroke", normalColor);
+        bottomLabel.svg.querySelector("path").setAttribute("stroke", normalColor);
 
-      if (activeLayerName === "AO") {
-        middleLabel.label.style.color = greyColor;
-        bottomLabel.label.style.color = greyColor;
-        middleLabel.svg.querySelector("path").setAttribute("stroke", greyLineColor);
-        bottomLabel.svg.querySelector("path").setAttribute("stroke", greyLineColor);
-      } else if (activeLayerName === "HYPERBEAM") {
-        topLabel.label.style.color = greyColor;
-        bottomLabel.label.style.color = greyColor;
-        topLabel.svg.querySelector("path").setAttribute("stroke", greyLineColor);
-        bottomLabel.svg.querySelector("path").setAttribute("stroke", greyLineColor);
-      } else if (activeLayerName === "ARWEAVE") {
-        topLabel.label.style.color = greyColor;
-        middleLabel.label.style.color = greyColor;
-        topLabel.svg.querySelector("path").setAttribute("stroke", greyLineColor);
-        middleLabel.svg.querySelector("path").setAttribute("stroke", greyLineColor);
+        if (activeLayerName === "AO") {
+          middleLabel.label.style.color = greyColor;
+          bottomLabel.label.style.color = greyColor;
+          middleLabel.svg.querySelector("path").setAttribute("stroke", greyColor);
+          bottomLabel.svg.querySelector("path").setAttribute("stroke", greyColor);
+        } else if (activeLayerName === "HYPERBEAM") {
+          topLabel.label.style.color = greyColor;
+          bottomLabel.label.style.color = greyColor;
+          topLabel.svg.querySelector("path").setAttribute("stroke", greyColor);
+          bottomLabel.svg.querySelector("path").setAttribute("stroke", greyColor);
+        } else if (activeLayerName === "ARWEAVE") {
+          topLabel.label.style.color = greyColor;
+          middleLabel.label.style.color = greyColor;
+          topLabel.svg.querySelector("path").setAttribute("stroke", greyColor);
+          middleLabel.svg.querySelector("path").setAttribute("stroke", greyColor);
+        }
+      } catch (error) {
+        console.warn("DocSelector: Error in greyOutOtherLabels, using fallback colors", error);
+        // Fallback to predefined colors
+        const fallbackColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
+        
+        topLabel.label.style.color = fallbackColors.text;
+        middleLabel.label.style.color = fallbackColors.text;
+        bottomLabel.label.style.color = fallbackColors.text;
+        topLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+        middleLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+        bottomLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+
+        if (activeLayerName === "AO") {
+          middleLabel.label.style.color = fallbackColors.grey;
+          bottomLabel.label.style.color = fallbackColors.grey;
+          middleLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.grey);
+          bottomLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.grey);
+        } else if (activeLayerName === "HYPERBEAM") {
+          topLabel.label.style.color = fallbackColors.grey;
+          bottomLabel.label.style.color = fallbackColors.grey;
+          topLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.grey);
+          bottomLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.grey);
+        } else if (activeLayerName === "ARWEAVE") {
+          topLabel.label.style.color = fallbackColors.grey;
+          middleLabel.label.style.color = fallbackColors.grey;
+          topLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.grey);
+          middleLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.grey);
+        }
       }
     }
 
     function resetLabelColors() {
-      const { theme } = window.DocSelectorConfig;
-      const colors = isDark ? theme.colors.dark : theme.colors.light;
-      const normalColor = colors.text;
-      const normalLineColor = colors.line;
+      try {
+        const { theme } = window.DocSelectorConfig;
+        const colors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
+        const normalColor = colors.text;
 
-      topLabel.label.style.color = normalColor;
-      middleLabel.label.style.color = normalColor;
-      bottomLabel.label.style.color = normalColor;
+        topLabel.label.style.color = normalColor;
+        middleLabel.label.style.color = normalColor;
+        bottomLabel.label.style.color = normalColor;
 
-      topLabel.svg.querySelector("path").setAttribute("stroke", normalLineColor);
-      middleLabel.svg.querySelector("path").setAttribute("stroke", normalLineColor);
-      bottomLabel.svg.querySelector("path").setAttribute("stroke", normalLineColor);
+        topLabel.svg.querySelector("path").setAttribute("stroke", normalColor);
+        middleLabel.svg.querySelector("path").setAttribute("stroke", normalColor);
+        bottomLabel.svg.querySelector("path").setAttribute("stroke", normalColor);
+      } catch (error) {
+        console.warn("DocSelector: Error in resetLabelColors, using fallback colors", error);
+        // Fallback to predefined colors
+        const fallbackColors = isDark ? THEME_COLORS.dark : THEME_COLORS.light;
+        
+        topLabel.label.style.color = fallbackColors.text;
+        middleLabel.label.style.color = fallbackColors.text;
+        bottomLabel.label.style.color = fallbackColors.text;
+
+        topLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+        middleLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+        bottomLabel.svg.querySelector("path").setAttribute("stroke", fallbackColors.text);
+      }
     }
 
     function setHighlight(layerName) {
