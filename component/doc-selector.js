@@ -301,7 +301,10 @@
       labelContainer.style.alignItems = "center";
       labelContainer.style.transition = "all 0.15s ease";
       labelContainer.style.opacity = "0";
-      labelContainer.style.pointerEvents = "none";
+      // Make labels always clickable with larger hit area
+      labelContainer.style.pointerEvents = "auto";
+      labelContainer.style.padding = "10px"; // Increase clickable area
+      labelContainer.style.margin = "-10px"; // Offset padding to maintain visual position
 
       // Create text label
       const label = document.createElement("span");
@@ -329,20 +332,20 @@
       switch (position) {
         case "top-right":
           linePath = "M-3.57628e-07 7H48V0";
-          labelPosition = { right: "-28px", top: "-15px" };
-          svgPosition = { right: "-31px", top: "10px" };
+          labelPosition = { right: "-18px", top: "-5px" }; // Adjusted for padding
+          svgPosition = { right: "-21px", top: "20px" }; // Adjusted for padding
           labelContainer.style.flexDirection = "row";
           break;
         case "left":
           linePath = "M39.5 6H1V0";
-          labelPosition = { right: "-52px", top: "-15px" };
-          svgPosition = { right: "-80px", top: "10px" };
+          labelPosition = { right: "-42px", top: "-5px" }; // Adjusted for padding
+          svgPosition = { right: "-70px", top: "20px" }; // Adjusted for padding
           labelContainer.style.flexDirection = "row";
           break;
         case "bottom-right":
           linePath = "M2.38419e-07 1H49V8";
-          labelPosition = { right: "-55px", bottom: "-2px" };
-          svgPosition = { right: "-31px", top: "-30px" };
+          labelPosition = { right: "-45px", bottom: "8px" }; // Adjusted for padding
+          svgPosition = { right: "-21px", top: "-20px" }; // Adjusted for padding
           labelContainer.style.flexDirection = "row";
           break;
       }
@@ -379,6 +382,17 @@
     bottomLabel.container.addEventListener("click", () => {
       if (currentCookbook !== "ARWEAVE") window.location.href = links.ARWEAVE;
     });
+
+    // Set cursor for non-current labels
+    if (currentCookbook !== "AO") {
+      topLabel.container.style.cursor = "pointer";
+    }
+    if (currentCookbook !== "HYPERBEAM") {
+      middleLabel.container.style.cursor = "pointer";
+    }
+    if (currentCookbook !== "ARWEAVE") {
+      bottomLabel.container.style.cursor = "pointer";
+    }
 
     // Add orange square to current cookbook
     const orangeSquare = document.createElement("div");
@@ -484,19 +498,6 @@
       middleLabel.container.style.opacity = "1";
       bottomLabel.container.style.opacity = "1";
 
-      if (currentCookbook !== "AO") {
-        topLabel.container.style.pointerEvents = "auto";
-        topLabel.container.style.cursor = "pointer";
-      }
-      if (currentCookbook !== "HYPERBEAM") {
-        middleLabel.container.style.pointerEvents = "auto";
-        middleLabel.container.style.cursor = "pointer";
-      }
-      if (currentCookbook !== "ARWEAVE") {
-        bottomLabel.container.style.pointerEvents = "auto";
-        bottomLabel.container.style.cursor = "pointer";
-      }
-
       layerWrapper.style.width = "120px";
       layerWrapper.style.height = "90px";
 
@@ -535,10 +536,6 @@
       bottomLabel.container.style.opacity = "0";
 
       resetLabelColors();
-
-      topLabel.container.style.pointerEvents = "none";
-      middleLabel.container.style.pointerEvents = "none";
-      bottomLabel.container.style.pointerEvents = "none";
 
       layerWrapper.style.width = "77px";
       layerWrapper.style.height = "70px";
