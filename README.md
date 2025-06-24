@@ -38,6 +38,21 @@ window.DocSelectorConfig = {
         AO: "https://cookbook_ao.arweave.net/",
         HYPERBEAM: "https://hyperbeam.arweave.net/",
         ARWEAVE: "https://cookbook.arweave.net/"
+    },
+    theme: {
+        mode: "auto", // "auto", "light", "dark"
+        colors: {
+            light: {
+                text: "#333",
+                line: "#666", 
+                background: "white"
+            },
+            dark: {
+                text: "#e5e5e5",
+                line: "#888",
+                background: "black" 
+            }
+        }
     }
 };
 ```
@@ -62,6 +77,8 @@ The component automatically detects which site it's on by checking:
 |--------|------|-------------|
 | `currentCookbook` | String | Force specific site ("AO", "HYPERBEAM", or "ARWEAVE") |
 | `links` | Object | URLs for each documentation site |
+| `theme.mode` | String | Theme mode: "auto" (default), "light", or "dark" |
+| `theme.colors` | Object | Custom colors for light and dark themes |
 
 ## Usage Examples
 
@@ -73,6 +90,42 @@ window.DocSelectorConfig = {
         AO: "https://cookbook_ao.arweave.net/",
         HYPERBEAM: "https://hyperbeam.arweave.net/",
         ARWEAVE: "https://cookbook.arweave.net/"
+    }
+};
+```
+
+### Theme Configuration
+```javascript
+// Force dark mode
+window.DocSelectorConfig = {
+    theme: {
+        mode: "dark"
+    }
+};
+
+// Force light mode
+window.DocSelectorConfig = {
+    theme: {
+        mode: "light"
+    }
+};
+
+// Custom colors (with auto detection)
+window.DocSelectorConfig = {
+    theme: {
+        mode: "auto", // Still detects from document.documentElement
+        colors: {
+            light: {
+                text: "#2d3748",
+                line: "#4a5568",
+                background: "#f7fafc"
+            },
+            dark: {
+                text: "#f7fafc", 
+                line: "#cbd5e0",
+                background: "#1a202c"
+            }
+        }
     }
 };
 ```
@@ -197,11 +250,28 @@ doc-selector-component/
 
 ## Customization
 
-The component automatically detects your site's theme by looking for a `dark` class on the `documentElement`. To customize theme detection, modify the `onThemeChange` function in the source code.
+### Theme Configuration
+The component supports three theme modes:
 
-### Theme Detection
+- **Auto** (default): Automatically detects theme by looking for a `dark` class on `document.documentElement`
+- **Light**: Forces light theme regardless of system/page theme
+- **Dark**: Forces dark theme regardless of system/page theme
+
 ```javascript
-// The component looks for this pattern:
+// Auto-detection (default behavior)
+window.DocSelectorConfig = {
+    theme: { mode: "auto" }
+};
+
+// Force specific theme
+window.DocSelectorConfig = {
+    theme: { mode: "dark" } // or "light"
+};
+```
+
+### Theme Detection (Auto Mode)
+```javascript 
+// In auto mode, the component looks for this pattern:
 document.documentElement.classList.contains("dark")
 ```
 

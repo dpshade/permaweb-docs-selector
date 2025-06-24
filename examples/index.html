@@ -131,7 +131,33 @@ window.DocSelectorConfig = {
             <ul>
                 <li><strong>currentCookbook:</strong> The currently active documentation site ("AO", "HYPERBEAM", or "ARWEAVE")</li>
                 <li><strong>links:</strong> Object containing the URLs for each documentation site</li>
+                <li><strong>theme.mode:</strong> Theme mode - "auto" (default), "light", or "dark"</li>
+                <li><strong>theme.colors:</strong> Custom colors for light and dark themes</li>
             </ul>
+            
+            <h3>Theme Configuration Examples</h3>
+            <pre><code>// Force dark theme
+window.DocSelectorConfig = {
+    theme: { mode: "dark" }
+};
+
+// Force light theme  
+window.DocSelectorConfig = {
+    theme: { mode: "light" }
+};
+
+// Auto theme with custom colors
+window.DocSelectorConfig = {
+    theme: {
+        mode: "auto",
+        colors: {
+            light: { text: "#2d3748", line: "#4a5568", background: "#f7fafc" },
+            dark: { text: "#f7fafc", line: "#cbd5e0", background: "#1a202c" }
+        }
+    }
+};</code></pre>
+            
+            <p><a href="theme-config-test.html" target="_blank">→ View Interactive Theme Configuration Demo</a></p>
         </div>
         
         <div class="demo-section">

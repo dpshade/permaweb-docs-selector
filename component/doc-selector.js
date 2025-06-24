@@ -46,7 +46,22 @@
   // Configuration object that can be overridden at runtime
   window.DocSelectorConfig = window.DocSelectorConfig || {
     currentCookbook: detectCurrentSite(),
-    links: DOCUMENTATION_LINKS
+    links: DOCUMENTATION_LINKS,
+    theme: {
+      mode: "auto", // "auto", "light", "dark"
+      colors: {
+        light: {
+          text: "#333",
+          line: "#666",
+          background: "white"
+        },
+        dark: {
+          text: "#e5e5e5", 
+          line: "#888",
+          background: "black"
+        }
+      }
+    }
   };
 
   // SVG layer definitions
@@ -121,23 +136,39 @@
     let svgContainer = null;
 
     function onThemeChange(cb) {
-      const root = document.documentElement;
+      const { theme } = window.DocSelectorConfig;
+      
+      function determineIsDark() {
+        if (theme.mode === "dark") return true;
+        if (theme.mode === "light") return false;
+        // Auto mode - detect from document element
+        return document.documentElement.classList.contains("dark");
+      }
       
       // Fire once on start-up
-      cb(root.classList.contains("dark"));
+      cb(determineIsDark());
       
-      // Observe further changes
-      const ob = new MutationObserver(() => cb(root.classList.contains("dark")));
-      ob.observe(root, { attributes: true, attributeFilter: ["class"] });
-      return () => ob.disconnect();
+      // Only observe DOM changes if in auto mode
+      if (theme.mode === "auto") {
+        const root = document.documentElement;
+        const ob = new MutationObserver(() => cb(determineIsDark()));
+        ob.observe(root, { attributes: true, attributeFilter: ["class"] });
+        return () => ob.disconnect();
+      }
+      
+      // For manual modes, return a no-op cleanup function
+      return () => {};
     }
 
     // Function to update theme colors
     function updateThemeColors(dark) {
       isDark = dark;
       
-      const textColor = isDark ? "#e5e5e5" : "#333";
-      const lineColor = isDark ? "#888" : "#666";
+      const { theme } = window.DocSelectorConfig;
+      const colors = isDark ? theme.colors.dark : theme.colors.light;
+      const textColor = colors.text;
+      const lineColor = colors.line;
+      const backgroundColor = colors.background;
       
       // Update the "Select your documentation" text color
       const docTextSpan = docText.querySelector("span");
@@ -159,7 +190,7 @@
         bottomLabel.svg.querySelector("path").setAttribute("stroke", lineColor);
       }
       if (innerWhiteSquare) {
-        innerWhiteSquare.style.backgroundColor = isDark ? "black" : "white";
+        innerWhiteSquare.style.backgroundColor = backgroundColor;
       }
     }
 
@@ -491,10 +522,12 @@
 
     // Helper functions for layer highlighting
     function greyOutOtherLabels(activeLayerName) {
+      const { theme } = window.DocSelectorConfig;
+      const colors = isDark ? theme.colors.dark : theme.colors.light;
       const greyColor = isDark ? "#666" : "#999";
       const greyLineColor = isDark ? "#444" : "#bbb";
-      const normalColor = isDark ? "#e5e5e5" : "#333";
-      const normalLineColor = isDark ? "#888" : "#666";
+      const normalColor = colors.text;
+      const normalLineColor = colors.line;
 
       topLabel.label.style.color = normalColor;
       middleLabel.label.style.color = normalColor;
@@ -522,8 +555,10 @@
     }
 
     function resetLabelColors() {
-      const normalColor = isDark ? "#e5e5e5" : "#333";
-      const normalLineColor = isDark ? "#888" : "#666";
+      const { theme } = window.DocSelectorConfig;
+      const colors = isDark ? theme.colors.dark : theme.colors.light;
+      const normalColor = colors.text;
+      const normalLineColor = colors.line;
 
       topLabel.label.style.color = normalColor;
       middleLabel.label.style.color = normalColor;
