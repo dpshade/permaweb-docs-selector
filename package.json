@@ -2,7 +2,7 @@
   "name": "doc-selector-component",
   "version": "1.0.0",
   "description": "A standalone JavaScript component for navigating between documentation sites",
-  "main": "dist/doc-selector.js",
+  "main": "component/doc-selector.js",
   "scripts": {
     "serve": "bun serve --port 8000 examples/",
     "serve:fallback": "python3 -m http.server 8000 || python -m SimpleHTTPServer 8000",
@@ -32,8 +32,9 @@
   },
   "homepage": "https://github.com/dps/doc-selector-component#readme",
   "files": [
-    "dist/",
+    "component/",
     "examples/",
+    "scripts/",
     "README.md"
   ],
   "dependencies": {

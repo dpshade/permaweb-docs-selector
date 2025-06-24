@@ -49,9 +49,9 @@ async function deployToArweave() {
     }
     
     // Load the DocSelector file
-    const filePath = path.join(process.cwd(), 'dist', 'doc-selector.js');
+    const filePath = path.join(process.cwd(), 'component', 'doc-selector.js');
     if (!fs.existsSync(filePath)) {
-      throw new Error('❌ DocSelector file not found at dist/doc-selector.js');
+      throw new Error('❌ DocSelector file not found at component/doc-selector.js');
     }
     
     const fileData = fs.readFileSync(filePath);

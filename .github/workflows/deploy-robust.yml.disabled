@@ -1,4 +1,4 @@
-name: Deploy DocSelector (Simple)
+name: Deploy DocSelector (Robust)
 
 on:
   push:
@@ -19,13 +19,26 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'npm'
           
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Deploy to Arweave using custom script
-        run: node scripts/deploy-to-arweave.js
+      - name: Install dependencies with npm
+        run: |
+          echo "📦 Installing dependencies with npm..."
+          npm install
+          
+      - name: Verify file exists
+        run: |
+          if [ ! -f "component/doc-selector.js" ]; then
+            echo "❌ DocSelector file not found at component/doc-selector.js"
+            exit 1
+          fi
+          echo "✅ DocSelector file found ($(stat -c%s component/doc-selector.js) bytes)"
+          
+      - name: Deploy to Arweave
+        run: |
+          echo "🚀 Deploying to Arweave..."
+          node scripts/deploy-to-arweave.js
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           
@@ -58,6 +71,25 @@ jobs:
           \`\`\`html
           <script src="https://arweave.net/$TX_ID"></script>
           \`\`\`
+          
+          ## Theme Configuration
+          
+          \`\`\`javascript
+          // Auto theme (default)
+          window.DocSelectorConfig = {
+              theme: { mode: "auto" }
+          };
+          
+          // Force dark theme
+          window.DocSelectorConfig = {
+              theme: { mode: "dark" }
+          };
+          
+          // Force light theme
+          window.DocSelectorConfig = {
+              theme: { mode: "light" }
+          };
+          \`\`\`
           EOF
           
       - name: Commit deployment info
@@ -65,4 +97,10 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add DEPLOYMENT.md
-          git diff --staged --quiet || (git commit -m "📦 Deploy: ${{ steps.tx.outputs.transaction_id }}" && git push) 
+          if ! git diff --staged --quiet; then
+            git commit -m "📦 Deploy: ${{ steps.tx.outputs.transaction_id }}"
+            git push
+            echo "✅ Deployment info updated"
+          else
+            echo "ℹ️ No changes to commit"
+          fi 

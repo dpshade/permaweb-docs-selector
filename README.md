@@ -170,7 +170,7 @@ The project includes GitHub Actions that automatically deploy to Arweave when yo
      ```
 
 2. **Deploy**:
-   - Push changes to `dist/doc-selector.js` on the main branch
+   - Push changes to `component/doc-selector.js` on the main branch
    - GitHub Actions will automatically deploy to Arweave
    - Check the Actions tab to see the deployment status and get the transaction ID
 
@@ -230,14 +230,14 @@ bun run serve
 
 ```
 doc-selector-component/
-├── dist/
+├── component/
 │   └── doc-selector.js          # Main standalone component
 ├── examples/
 │   └── index.html              # Live demo and usage examples
-├── docs/
-│   └── (future documentation)
-├── config/
-│   └── (future configuration files)
+├── scripts/
+│   └── deploy-to-arweave.js    # Deployment script
+├── .github/
+│   └── workflows/              # GitHub Actions for auto-deployment
 └── README.md
 ```
 
